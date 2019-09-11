@@ -23,6 +23,7 @@
 package edu.cecar.controladores;
 
 import edu.cecar.componentes.basesDeDatos.ConectarMySQL;
+import edu.cecar.componentes.singletons.SingletonConexionBD;
 import edu.cecar.modelos.Empleado;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,17 +38,16 @@ import java.sql.SQLException;
 public class ControladorEmpleado {
 
     private ConectarMySQL conectarMySQL;
-    
+
     public ControladorEmpleado() {
-        
-        conectarMySQL = new ConectarMySQL("127.0.0.1", "manpower", "root", "");
-        
     }
     
     
-    public void guardar(Empleado empleado) throws SQLException{
+    
+    
+    public static void guardar(Empleado empleado) throws SQLException{
         
-        PreparedStatement preparedStatement = conectarMySQL.getConnection().prepareStatement("insert into empleados values(?, ?, ?, ?)");
+        PreparedStatement preparedStatement = SingletonConexionBD.getInstance().prepareStatement("insert into empleados values(?, ?, ?, ?)");
         preparedStatement.setString(1, empleado.getCodigo());
         preparedStatement.setString(2, empleado.getNombres());
         preparedStatement.setString(3, empleado.getApellidos());
@@ -55,11 +55,11 @@ public class ControladorEmpleado {
         preparedStatement.execute();
     }
     
-    public Empleado consultar(String codigo) throws SQLException{
+    public static Empleado consultar(String codigo) throws SQLException{
         
         Empleado empleado = null;
         
-        PreparedStatement preparedStatement = conectarMySQL.getConnection().prepareStatement(""
+        PreparedStatement preparedStatement = SingletonConexionBD.getInstance().prepareStatement(""
                 + "select nombres,apellidos,fechanacimiento from empleados where codigo = ?");
         
         preparedStatement.setString(1, codigo);
@@ -72,9 +72,9 @@ public class ControladorEmpleado {
         return empleado;
     }
     
-    public void actualizar(Empleado empleado) throws SQLException{
+    public static void actualizar(Empleado empleado) throws SQLException{
         
-        PreparedStatement preparedStatement = conectarMySQL.getConnection().prepareStatement("update empleados set nombres = ?, apellidos = ?, fechaNacimiento = ? where cedula = ?");
+        PreparedStatement preparedStatement = SingletonConexionBD.getInstance().prepareStatement("update empleados set nombres = ?, apellidos = ?, fechaNacimiento = ? where cedula = ?");
         preparedStatement.setString(1, empleado.getNombres());
         preparedStatement.setString(2, empleado.getApellidos());
         preparedStatement.setString(3, empleado.getFechaNaciemiento());
@@ -82,8 +82,8 @@ public class ControladorEmpleado {
         preparedStatement.execute();
     }
     
-    public void eliminar(String codigo) throws SQLException{
-        PreparedStatement preparedStatement = conectarMySQL.getConnection().prepareStatement("delete from empleados where cedula = ?");
+    public static void eliminar(String codigo) throws SQLException{
+        PreparedStatement preparedStatement = SingletonConexionBD.getInstance().prepareStatement("delete from empleados where cedula = ?");
         preparedStatement.setString(1, codigo);
         preparedStatement.execute();
     }

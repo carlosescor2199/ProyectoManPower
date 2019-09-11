@@ -5,6 +5,7 @@
  */
 package edu.cecar.test;
 
+import edu.cecar.componentes.singletons.SingletonConexionBD;
 import edu.cecar.controladores.ControladorEmpleado;
 import edu.cecar.modelos.Empleado;
 import java.sql.SQLException;
@@ -28,7 +29,7 @@ public class TestControladorEmpleado {
     
         try{
             
-            ControladorEmpleado controladorEmpleado = new ControladorEmpleado();
+            SingletonConexionBD.getInstance();
             System.out.println("Conexión Exitosa");
             
         }catch(Exception ex){
